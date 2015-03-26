@@ -1,4 +1,5 @@
 Meteor.subscribe("communities");
+Meteor.subscribe("members");
 
 Template.userpanel.helpers({
   has_communities: function(){
@@ -13,6 +14,15 @@ Template.communities.helpers({
   communities: function(){
     return CommunityList.find();
   }
+});
+
+Template.inviteform.events({
+  'submit form': function(event){
+    event.preventDefault();
+    var user_email = event.target.user_email.value;
+    Meteor.call('inviteMember', user_email, Template.currentData().slack_domain);
+
+    }
 });
 
 Template.new_community.events({
