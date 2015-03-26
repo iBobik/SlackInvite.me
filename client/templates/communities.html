@@ -1,9 +1,10 @@
 <template name="communities">
   {{#each communities}}
-    <h1>{{slack_domain}}</h1>
-    <h3>Let yur users join at: <a href="http://slackinvite.me/to/{{slack_domain}}">http://slackinvite.me/to/{{slack_domain}}</a></h3>
+    <h1>Slack community: {{slack_domain}}</h1>
+    <h3>Let your users join at: <a href="http://slackinvite.me/to/{{slack_domain}}">http://slackinvite.me/to/{{slack_domain}}</a></h3>
   {{/each}}
 
+  <h3>User List</h3>
   <ul class="list-group">
   {{#each c_members}}
     <li class="list-group-item">{{ user_email }}</li>
