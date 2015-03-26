@@ -15,10 +15,11 @@ Template.communities.helpers({
     return CommunityList.find();
   },
   c_members: function(){
-    var community = CommunityList.findOne({createdBy: Meteor.userId()});
-    var members = MemberList.find({communityId: community._id});
-    console.log(members)
-    return MemberList.find();
+    var community = CommunityList.findOne({createdBy: Meteor.userId()})._id;
+    console.log(community);
+    var members = MemberList.find({communityId: community}).fetch();
+    console.log(members);
+    return members;
   }
 });
 Template.inviteform.rendered = function(){

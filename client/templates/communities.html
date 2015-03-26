@@ -2,12 +2,9 @@
   {{#each communities}}
     <h1>{{slack_domain}}</h1>
   {{/each}}
-  <div class="row">
-    <div class="col-md-8">
-        {{#each c_members}}
-          {{user_mail}}
-        {{/each}}
-    </div>
-  </div>
-
+  <ul class="list-group">
+  {{#each c_members}}
+    <li class="list-group-item">{{ user_email }}</li>
+  {{/each}}
+  </ul>
 </template>

@@ -1,9 +1,11 @@
 Meteor.publish('communities', function () {
   return CommunityList.find({}, {fields: {'token': 0}});
 });
+
 Meteor.publish('members', function () {
-  return MemberList.find({});
+  return MemberList.find();
 });
+
 Meteor.methods({
   'insertCommunityData': function(slack_domain, token, auto_invite){
     var currentUserId = Meteor.userId();
