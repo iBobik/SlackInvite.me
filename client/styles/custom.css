@@ -2,3 +2,10 @@ body > .container {
   padding-top: 20px;
   padding-bottom: 20px;
 }
+.col-centered{
+    float: none;
+    margin: 0 auto;
+}
+#token {
+    margin-top: 15px;
+}

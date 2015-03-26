@@ -1,18 +1,16 @@
 <template name="userpanel">
-  <div class="navbar navbar-default" role="navigation">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#">Invite.me</a>
-        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
-          <span class="sr-only">Toggle navigation</span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-          <span class="icon-bar"></span>
-        </button>
-    </div>
-    <div class="navbar-collapse collapse">
-      <ul class="nav navbar-nav navbar-right">
-        {{> loginButtons}}
-      </ul>   
-    </div>
+  {{> navbar}}
+  <div class="container">
+    {{#unless currentUser}}
+     <center><h1>You must sign in first</h1></center>
+     <div class="col-md-3 col-centered">{{> loginButtons}}</div>
+    {{else}}
+      <center><h1>Hello {{currentUser.profile.name}}!!!</h1></center>
+      {{#if has_communities}}
+        {{> communities}}
+      {{else}}
+        {{> new_community}}
+      {{/if}}
+    {{/unless}}
   </div>
 </template>

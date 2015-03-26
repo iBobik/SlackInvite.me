@@ -1,0 +1,23 @@
+<template name="new_community">
+  <center>
+    <p>You can get your token at the bottom of the slack's Web API documentation: <a href="https://api.slack.com/web" target="_blank">api.slack.com/web</a></p>
+  </center>
+  <div class="col-md-7 col-centered">
+    <form>
+      <div class="input-group">
+        <span class="input-group-addon">http://</span>
+        <input type="text" class="form-control" name="slack_domain" placeholder="team domain" aria-describedby="addon2" required autofocus>
+        <span class="input-group-addon" id="addon2">.slack.com</span>
+      </div>
+      <div class="form-group">
+        <input type="text" class="form-control" name="token" id="token" placeholder="Token" required>
+      </div>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" name="auto_invite" id="auto-invite" checked="true" disabled> Auto-invite all users, disable to approve users manually (It can't be disabled at the moment)
+        </label>
+      </div>
+      <button type="submit" class="btn btn-primary btn-block">Submit</button>
+    </form>
+  </div>
+</template>
