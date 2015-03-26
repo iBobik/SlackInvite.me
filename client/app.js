@@ -8,11 +8,17 @@ Template.userpanel.helpers({
     }else{ 
       return false
     };
-  },
+  }
 });
 Template.communities.helpers({
   communities: function(){
     return CommunityList.find();
+  },
+  c_members: function(){
+    var community = CommunityList.findOne({createdBy: Meteor.userId()});
+    var members = MemberList.find({communityId: community._id});
+    console.log(members)
+    return MemberList.find();
   }
 });
 Template.inviteform.rendered = function(){

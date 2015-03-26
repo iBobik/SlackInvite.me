@@ -1,5 +1,5 @@
 Meteor.publish('communities', function () {
-  return CommunityList.find({}, {fields: {'slack_domain': 1}});
+  return CommunityList.find({}, {fields: {'token': 0}});
 });
 Meteor.publish('members', function () {
   return MemberList.find({});

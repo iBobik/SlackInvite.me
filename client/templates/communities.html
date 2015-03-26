@@ -1,5 +1,13 @@
 <template name="communities">
   {{#each communities}}
-    {{slack_domain}}
+    <h1>{{slack_domain}}</h1>
   {{/each}}
+  <div class="row">
+    <div class="col-md-8">
+        {{#each c_members}}
+          {{user_mail}}
+        {{/each}}
+    </div>
+  </div>
+
 </template>
