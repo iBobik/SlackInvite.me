@@ -3,7 +3,7 @@ Meteor.subscribe("members");
 
 Template.userpanel.helpers({
   has_communities: function(){
-    if (CommunityList.find().count() != 0){
+    if (CommunityList.find({createdBy: Meteor.userId()}).count() != 0){
       return true
     }else{ 
       return false
@@ -12,7 +12,7 @@ Template.userpanel.helpers({
 });
 Template.communities.helpers({
   communities: function(){
-    return CommunityList.find();
+    return CommunityList.find({createdBy: Meteor.userId()});
   },
   c_members: function(){
     var community = CommunityList.findOne({createdBy: Meteor.userId()})._id;
