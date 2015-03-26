@@ -3,12 +3,16 @@
   <div class="jumbotron">
     <h1>Join "{{slack_domain}}" in Slack</h1>
     <h3>Fill in the form and we'll get back at you!</h3>
-    <form>
-      <div class="form-group">
-          <input type="email" class="form-control input-lg" name="user_email" id="user_email" placeholder="Your email address" >
-      </div>
-      <button type="submit" class="btn btn-primary btn-lg btn-block">Request invite</button>
-    </form>
+    {{#unless inviteSent}}
+      <form>
+        <div class="form-group">
+            <input type="email" class="form-control input-lg" name="user_email" id="user_email" placeholder="Your email address" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg btn-block">Request invite</button>
+      </form>
+    {{else}}
+      <h3 style="color: green;">Request sent</h3>
+    {{/unless}}
   </div>
 </div>
   

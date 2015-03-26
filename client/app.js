@@ -15,14 +15,22 @@ Template.communities.helpers({
     return CommunityList.find();
   }
 });
+Template.inviteform.rendered = function(){
+    Session.set('inviteSent', false);
+};
 
 Template.inviteform.events({
   'submit form': function(event){
     event.preventDefault();
     var user_email = event.target.user_email.value;
     Meteor.call('inviteMember', user_email, Template.currentData().slack_domain);
-
-    }
+    Session.set('inviteSent', true);
+  }
+});
+Template.inviteform.helpers({
+  inviteSent: function(){
+    return Session.get('inviteSent');
+  }
 });
 
 Template.new_community.events({
