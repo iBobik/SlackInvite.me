@@ -14,7 +14,6 @@ Template.userpanel.helpers({
       return Session.get('add_community')
     }else{
       return true
-      //Session.get('add_community', true)
     };
   }
 });
@@ -66,6 +65,17 @@ Template.inviteform.events({
 Template.inviteform.helpers({
   inviteSent: function(){
     return Session.get('inviteSent');
+  }
+});
+Template.footer.helpers({
+  iswhite: function(){
+    var routes = ["home","inviteform"];
+    var route = Router.current().route.getName();
+    if (_.contains(routes,route)){
+      return true;
+    }else{
+      return false;
+    }
   }
 });
 
