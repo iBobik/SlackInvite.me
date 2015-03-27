@@ -2,6 +2,10 @@ Meteor.publish('communities', function () {
   return CommunityList.find({}, {fields: {'token': 0}});
 });
 
+Meteor.publish('currentcommunity', function (domain) {
+  return CommunityList.find({slack_domain: domain}, {fields: {'token': 0}});
+});
+
 Meteor.publish('members', function () {
   return MemberList.find();
 });
