@@ -1,17 +1,34 @@
 <template name="communities">
-  {{#each communities}}
-    <h1>Slack community: {{slack_domain}}</h1>
-    <h3>Let your users join at: 
-      {{#linkTo route="post.show" data=getData query="q=s" hash="hashFrag" class="my-cls"}}
-        {{urlFor route="inviteform" data=getData }}
-      {{/linkTo}}
-    </h3>
-  {{/each}}
-
-  <h3>User List</h3>
-  <ul class="list-group">
-  {{#each c_members}}
-    <li class="list-group-item">{{ user_email }}</li>
-  {{/each}}
-  </ul>
+  <div class="row">
+    <div class="col-md-4">
+      <h3>Community List</h3>
+      <div class="list-group">
+        {{#each communities}}
+          <a class="list-group-item community {{#if selected}}active{{/if}}">{{slack_domain}}</a>
+        {{/each}}
+      </div>
+    </div>
+    <div class="col-md-8">
+      <div class="row">
+        <h5>Let your users join at: 
+        {{#linkTo route="inviteform" data=community}}
+          {{urlFor route="inviteform" data=community }}
+        {{/linkTo}}
+      </h5>
+      </div>
+      <div class="row">
+        <h3>User List</h3>
+        <ul class="list-group">
+        {{#if has_members}}
+          {{#each c_members}}
+            <li class="list-group-item">{{ user_email }}</li>
+          {{/each}}
+        {{else}}
+          <li class="list-group-item">No users for now.</li>
+        {{/if}}
+        </ul>
+      </div>
+    </div>
+  </div>
+  
 </template>

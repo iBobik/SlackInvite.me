@@ -10,16 +10,37 @@ Template.userpanel.helpers({
     };
   }
 });
+Template.communities.onRendered( function(){
+  var first_community_id = CommunityList.findOne({createdBy: Meteor.userId()})._id;
+  Session.set('community', first_community_id);
+});
 Template.communities.helpers({
   communities: function(){
     return CommunityList.find({createdBy: Meteor.userId()});
   },
+  selected: function(){
+    return Session.equals('community', this._id)
+  },
+  community: function(){
+    return CommunityList.findOne(Session.get('community'));
+  },
+  has_members: function(){
+    if (MemberList.find({communityId: Session.get('community')}).count() != 0){
+      return true
+    }else{
+      return false
+    }
+  },
   c_members: function(){
     var community = CommunityList.findOne({createdBy: Meteor.userId()})._id;
-    console.log(community);
-    var members = MemberList.find({communityId: community}).fetch();
-    console.log(members);
+    var members = MemberList.find({communityId: Session.get('community')}).fetch();
     return members;
+  }
+});
+Template.communities.events({
+  'click .community': function(event){
+    event.preventDefault();
+    Session.set('community', this._id);
   }
 });
 Template.inviteform.rendered = function(){
