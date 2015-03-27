@@ -1,18 +1,22 @@
 Meteor.subscribe("communities");
 Meteor.subscribe("members");
 
-Template.userpanel.helpers({
-  has_communities: function(){
-    if (CommunityList.find({createdBy: Meteor.userId()}).count() != 0){
-      return true
-    }else{ 
-      return false
-    };
-  }
+Template.userpanel.onRendered( function(){
+  Session.get('add_community', false)
 });
 Template.communities.onRendered( function(){
   var first_community_id = CommunityList.findOne({createdBy: Meteor.userId()})._id;
   Session.set('community', first_community_id);
+});
+Template.userpanel.helpers({
+  add_community: function(){
+    if (CommunityList.find({createdBy: Meteor.userId()}).count() != 0){
+      return Session.get('add_community')
+    }else{
+      return true
+      //Session.get('add_community', true)
+    };
+  }
 });
 Template.communities.helpers({
   communities: function(){
@@ -31,7 +35,7 @@ Template.communities.helpers({
       return false
     }
   },
-  c_members: function(){
+  members: function(){
     var community = CommunityList.findOne({createdBy: Meteor.userId()})._id;
     var members = MemberList.find({communityId: Session.get('community')}).fetch();
     return members;
@@ -41,6 +45,10 @@ Template.communities.events({
   'click .community': function(event){
     event.preventDefault();
     Session.set('community', this._id);
+  },
+  'click .add_community': function(event){
+    event.preventDefault();
+    Session.set('add_community', true);
   }
 });
 Template.inviteform.rendered = function(){
@@ -68,5 +76,6 @@ Template.new_community.events({
     var token = event.target.token.value;
     var auto_invite = event.target.auto_invite.checked;
     Meteor.call('insertCommunityData', slack_domain, token, auto_invite)
+    Session.set('add_community', false);
     }
 });

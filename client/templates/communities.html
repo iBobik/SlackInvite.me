@@ -6,6 +6,7 @@
         {{#each communities}}
           <a class="list-group-item community {{#if selected}}active{{/if}}">{{slack_domain}}</a>
         {{/each}}
+        <a class="list-group-item add_community"> Add new community</a>
       </div>
     </div>
     <div class="col-md-8">
@@ -20,7 +21,7 @@
         <h3>User List</h3>
         <ul class="list-group">
         {{#if has_members}}
-          {{#each c_members}}
+          {{#each members}}
             <li class="list-group-item">{{ user_email }}</li>
           {{/each}}
         {{else}}

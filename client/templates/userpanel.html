@@ -6,10 +6,10 @@
      <div class="col-md-3 col-centered">{{> loginButtons}}</div>
     {{else}}
       <center><h1>Hello {{currentUser.profile.name}}!!!</h1></center>
-      {{#if has_communities}}
-        {{> communities}}
-      {{else}}
+      {{#if add_community}}
         {{> new_community}}
+      {{else}}
+        {{> communities}}
       {{/if}}
     {{/unless}}
   </div>
