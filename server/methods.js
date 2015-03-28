@@ -10,6 +10,20 @@ Meteor.publish('members', function () {
   return MemberList.find();
 });
 
+/* extend the default accounts-github function to add user email addresses and usernames to our mongodb */
+Accounts.onCreateUser(function(options, user) {
+  if (options.profile) {
+    user.profile = options.profile;
+  }
+ 
+  user.profile.github = {};
+  user.profile.github.accessToken = user.services.github.accessToken;
+  user.profile.github.email = user.services.github.email;
+  user.profile.github.username = user.services.github.username;
+ 
+  return user;
+});
+
 Meteor.methods({
   'insertCommunityData': function(slack_domain, token, auto_invite){
     var currentUserId = Meteor.userId();
@@ -29,7 +43,14 @@ Meteor.methods({
     if (community.auto_invite){
       var API_url = 'https://' + slack_domain + '.slack.com/api/users.admin.invite'
       var response = HTTP.post(API_url, {params: {email: user_email, token: community.token,set_active: true}});
-    };
+    }
+    else {
+      //send a notice about a new request invitation via email
+      admin = Meteor.users.find({_id: community.createdBy})
+      username = admin.profile.github.username
+      toemail = admin.profile.github.email
+      inviteNoticeEmail(username, user_email, slack_domain, toemail);
+    }
   },
   'inviteNoticeEmail': function(username, inviteuser, slackgroup, toEmail){
     /*
