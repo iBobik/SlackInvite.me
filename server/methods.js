@@ -30,5 +30,23 @@ Meteor.methods({
       var API_url = 'https://' + slack_domain + '.slack.com/api/users.admin.invite'
       var response = HTTP.post(API_url, {params: {email: user_email, token: community.token,set_active: true}});
     };
+  },
+  'inviteNoticeEmail': function(username, inviteuser, slackgroup, toEmail){
+    /* sends an invite notice to the slack channel admin about a new invite */
+    return Meteor.Mandrill.sendTemplate({
+      "template_name": "default-slackinvite-me",
+      "template_content": [
+        {
+          userName: username,
+          inviteUser: inviteuser,
+          slackGroup: slackgroup
+        }
+      ],
+      "message": {
+        "to": [
+          {"email": toEmail}
+        ]
+      }
+    });
   }
-})
+});
