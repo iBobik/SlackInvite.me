@@ -32,7 +32,13 @@ Meteor.methods({
     };
   },
   'inviteNoticeEmail': function(username, inviteuser, slackgroup, toEmail){
-    /* sends an invite notice to the slack channel admin about a new invite */
+    /*
+    Sends an invite notice to the slack channel admin about a new invite:
+    * 'username' should be the username of the admin being emailed
+    * 'inviteuser' should be the email of the user requesting invitation
+    * 'slackgroup' is the group the user requested invitation to
+    * 'toEmail' is the email of the admin to be notified
+    */
     return Meteor.Mandrill.sendTemplate({
       "template_name": "default-slackinvite-me",
       "template_content": [
