@@ -20,7 +20,7 @@ Accounts.onCreateUser(function(options, user) {
   user.profile.github.accessToken = user.services.github.accessToken;
   user.profile.github.email = user.services.github.email;
   user.profile.github.username = user.services.github.username;
- 
+  console.log(user);
   return user;
 });
 
@@ -46,10 +46,10 @@ Meteor.methods({
     }
     else {
       //send a notice about a new request invitation via email
-      admin = Meteor.users.find({_id: community.createdBy})
+      admin = Meteor.users.findOne({_id: community.createdBy});
       username = admin.profile.github.username
       toemail = admin.profile.github.email
-      inviteNoticeEmail(username, user_email, slack_domain, toemail);
+      Meteor.call('inviteNoticeEmail', username, user_email, slack_domain, toemail);
     }
   },
   'inviteNoticeEmail': function(username, inviteuser, slackgroup, toEmail){
@@ -64,9 +64,16 @@ Meteor.methods({
       "template_name": "default-slackinvite-me",
       "template_content": [
         {
-          userName: username,
-          inviteUser: inviteuser,
-          slackGroup: slackgroup
+          name: "userName",
+          content: username
+        },
+        {   
+          name: "inviteUser",
+          content: inviteuser
+        },
+        {
+          name: "slackGroup",
+          content: slackgroup
         }
       ],
       "message": {
