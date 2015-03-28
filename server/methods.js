@@ -20,7 +20,6 @@ Accounts.onCreateUser(function(options, user) {
   user.profile.github.accessToken = user.services.github.accessToken;
   user.profile.github.email = user.services.github.email;
   user.profile.github.username = user.services.github.username;
-  console.log(user);
   return user;
 });
 
