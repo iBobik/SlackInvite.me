@@ -18,6 +18,12 @@ body > .container > .jumbotron {
   background-color: black;
   z-index: -2;
 }
+.invited {
+  color: #4caf50;
+}
+.pending_invitation {
+  color: #e51c23;
+}
 .bg {
   position: absolute;
   background-image: url('http://img.imgur.com/nBXgYL7.jpg');

@@ -15,6 +15,11 @@
         {{#linkTo route="inviteform" data=community}}
           {{urlFor route="inviteform" data=community }}
         {{/linkTo}}
+        <div class="checkbox">
+          <label class="auto_invite">
+            <input type="checkbox" name="auto_invite" id="auto-invite" checked="{{community.auto_invite}}"> Auto-invite all users, disable to approve users manually
+          </label>
+        </div>
       </h5>
       </div>
       <div class="row">
@@ -22,7 +27,20 @@
         <ul class="list-group">
         {{#if has_members}}
           {{#each members}}
-            <li class="list-group-item">{{ user_email }}</li>
+            <li class="list-group-item">
+              {{ user_email }}
+              {{#if invited}}
+              <span class="pull-right invited">
+                <i class="glyphicon glyphicon-ok"></i> Invited
+                <a class="btn btn-sm btn-primary send" role="button">Resend</a>
+              </span>
+              {{else}}
+                <span class="pull-right pending_invitation">
+                  <i class="glyphicon glyphicon-remove"></i> Pending Invitation
+                  <a class="btn btn-sm btn-success send" role="button">Invite</a>
+                </span>
+              {{/if}}
+            </li>
           {{/each}}
         {{else}}
           <li class="list-group-item">No users for now.</li>

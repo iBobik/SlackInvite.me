@@ -1,6 +1,7 @@
 <template name="userpanel">
   {{> navbar}}
   <div class="container">
+    {{> BootstrapAlerts}}
     {{#unless currentUser}}
      <center><h1>You must sign in first</h1></center>
      <div class="col-md-3 col-centered">{{> loginButtons}}</div>

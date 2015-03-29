@@ -33,23 +33,39 @@ Meteor.methods({
       createdBy: currentUserId
     });
   },
+  'changeAutoInvite': function(communityId, auto_invite){
+    var currentUserId = Meteor.userId();
+    var community = CommunityList.findOne({_id: communityId});
+    if (community.createdBy == currentUserId){
+      CommunityList.update(communityId, {$set: {auto_invite: auto_invite}});
+    }
+  },
   'inviteMember': function(user_email, slack_domain){
     var community = CommunityList.findOne({slack_domain: slack_domain});
     MemberList.insert({
       user_email: user_email,
-      communityId: community._id
+      communityId: community._id,
+      invited: community.auto_invite
     });
     if (community.auto_invite){
-      var API_url = 'https://' + slack_domain + '.slack.com/api/users.admin.invite'
-      var response = HTTP.post(API_url, {params: {email: user_email, token: community.token,set_active: true}});
+      Meteor.call('sendInvite', community._id, user_email);
+      // var API_url = 'https://' + slack_domain + '.slack.com/api/users.admin.invite';
+      // var response = HTTP.post(API_url, {params: {email: user_email, token: community.token,set_active: true}});
     }
     else {
       //send a notice about a new request invitation via email
       admin = Meteor.users.findOne({_id: community.createdBy});
-      username = admin.profile.github.username
-      toemail = admin.profile.github.email
+      username = admin.profile.github.username;
+      toemail = admin.profile.github.email;
       Meteor.call('inviteNoticeEmail', username, user_email, slack_domain, toemail);
     }
+  },
+  'sendInvite': function(community_id, user_email){
+    var community = CommunityList.findOne({_id: community_id});
+    var member = MemberList.findOne({user_email: user_email});
+    var API_url = 'https://' + community.slack_domain + '.slack.com/api/users.admin.invite';
+    var response = HTTP.post(API_url, {params: {email: member.user_email, token: community.token,set_active: true}});
+    MemberList.update(member._id, {$set: {invited: true}});
   },
   'inviteNoticeEmail': function(username, inviteuser, slackgroup, toEmail){
     /*

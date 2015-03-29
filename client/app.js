@@ -48,6 +48,20 @@ Template.communities.events({
   'click .add_community': function(event){
     event.preventDefault();
     Session.set('add_community', true);
+  },
+  'click .send': function(event){
+    event.preventDefault();
+    Meteor.call('sendInvite', this.communityId, this.user_email);
+    Alerts.set('The user has been invited', 'success');
+  },
+  'change .auto_invite input': function(event){
+    var communityId = Session.get('community');
+    Meteor.call('changeAutoInvite', communityId, event.target.checked);
+    if (event.target.checked){
+      Alerts.set('Auto-Invite has been enabled', 'warning');
+    }else{
+      Alerts.set('Auto-Invite has been disabled', 'warning');
+    };
   }
 });
 Template.inviteform.rendered = function(){
