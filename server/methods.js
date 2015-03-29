@@ -49,8 +49,6 @@ Meteor.methods({
     });
     if (community.auto_invite){
       Meteor.call('sendInvite', community._id, user_email);
-      // var API_url = 'https://' + slack_domain + '.slack.com/api/users.admin.invite';
-      // var response = HTTP.post(API_url, {params: {email: user_email, token: community.token,set_active: true}});
     }
     else {
       //send a notice about a new request invitation via email
