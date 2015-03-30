@@ -13,6 +13,7 @@ Router.map(function(){
     name: 'inviteform',
     path:'/to/:slack_domain',
     template: 'inviteform',
+    loadingTemplate: 'loading',
     data: function(){ return CommunityList.findOne({slack_domain: this.params.slack_domain});},
     waitOn: function(){
       return Meteor.subscribe('currentcommunity', this.params.slack_domain);
