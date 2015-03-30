@@ -23,8 +23,9 @@ Accounts.onCreateUser(function(options, user) {
 });
 
 Meteor.methods({
-  'insertCommunityData': function(slack_domain, token, auto_invite){
+  'insertCommunityData': function(slack_domain, encrypted_token, auto_invite){
     if (Meteor.userId()){
+      var token = CryptoJS.enc.Utf8.stringify(CryptoJS.enc.Base64.parse(encripted_token));
       var currentUserId = Meteor.userId();
       CommunityList.insert({
         slack_domain: slack_domain,
