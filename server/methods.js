@@ -1,5 +1,5 @@
 Meteor.publish('communities', function () {
-  return CommunityList.find({}, {fields: {'token': 0}});
+  return CommunityList.find({createdBy: this.userId}, {fields: {'token': 0}});
 });
 
 Meteor.publish('currentcommunity', function (domain) {
@@ -25,7 +25,7 @@ Accounts.onCreateUser(function(options, user) {
 Meteor.methods({
   'insertCommunityData': function(slack_domain, encrypted_token, auto_invite){
     if (Meteor.userId()){
-      var token = CryptoJS.enc.Utf8.stringify(CryptoJS.enc.Base64.parse(encripted_token));
+      var token = CryptoJS.enc.Utf8.stringify(CryptoJS.enc.Base64.parse(encrypted_token));
       var currentUserId = Meteor.userId();
       CommunityList.insert({
         slack_domain: slack_domain,
