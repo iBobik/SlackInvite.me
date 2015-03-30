@@ -5,7 +5,6 @@ Security.defineMethod("ifCurrentUserIsCreator", {
     return userId !== doc.createdBy;
   }
 });
-
 Security.defineMethod("ifUserIsComAdmin", {
   fetch: [],
   transform: null,
@@ -14,8 +13,7 @@ Security.defineMethod("ifUserIsComAdmin", {
     return userId !== CommunityList.findOne(doc.communityId).createdBy;
   }
 });
-
-CommunityList.permit(['insert']).ifLoggedIn().apply();
-MemberList.permit(['insert']).apply();
 CommunityList.permit(['update']).ifLoggedIn().ifCurrentUserIsCreator().apply();
 MemberList.permit(['update']).ifLoggedIn().ifUserIsComAdmin().apply();
+CommunityList.permit(['insert']).ifLoggedIn().apply();
+MemberList.permit(['insert']).apply();

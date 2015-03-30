@@ -24,19 +24,15 @@ Accounts.onCreateUser(function(options, user) {
 
 Meteor.methods({
   'insertCommunityData': function(slack_domain, token, auto_invite){
-    var currentUserId = Meteor.userId();
-    CommunityList.insert({
-      slack_domain: slack_domain,
-      token: token,
-      auto_invite: auto_invite,
-      createdBy: currentUserId
-    });
-  },
-  'changeAutoInvite': function(communityId, auto_invite){
-    var community = CommunityList.findOne({_id: communityId});
-    if (community.createdBy == Meteor.userId()){
-      CommunityList.update(communityId, {$set: {auto_invite: auto_invite}});
-    };
+    if (Meteor.userId()){
+      var currentUserId = Meteor.userId();
+      CommunityList.insert({
+        slack_domain: slack_domain,
+        token: token,
+        auto_invite: auto_invite,
+        createdBy: currentUserId
+      });
+    }
   },
   'inviteMember': function(user_email, slack_domain){
     var community = CommunityList.findOne({slack_domain: slack_domain});
@@ -58,12 +54,9 @@ Meteor.methods({
   },
   'sendInvite': function(community_id, user_email){
     var community = CommunityList.findOne({_id: community_id});
-    if (community.createdBy == Meteor.userId()){
-      var member = MemberList.findOne({user_email: user_email});
-      var API_url = 'https://' + community.slack_domain + '.slack.com/api/users.admin.invite';
-      var response = HTTP.post(API_url, {params: {email: member.user_email, token: community.token,set_active: true}});
-      MemberList.update(member._id, {$set: {invited: true}});
-    };
+    var member = MemberList.findOne({user_email: user_email});
+    var API_url = 'https://' + community.slack_domain + '.slack.com/api/users.admin.invite';
+    var response = HTTP.post(API_url, {params: {email: member.user_email, token: community.token,set_active: true}});
   },
   'inviteNoticeEmail': function(username, inviteuser, slackgroup, toEmail){
     /*

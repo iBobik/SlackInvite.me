@@ -52,11 +52,12 @@ Template.communities.events({
   'click .send': function(event){
     event.preventDefault();
     Meteor.call('sendInvite', this.communityId, this.user_email);
+    MemberList.update(this._id, {$set: {invited: true}});
     Alerts.set('The user has been invited', 'success');
   },
   'change .auto_invite input': function(event){
     var communityId = Session.get('community');
-    Meteor.call('changeAutoInvite', communityId, event.target.checked);
+    CommunityList.update(communityId, {$set: {auto_invite: event.target.checked}});
     if (event.target.checked){
       Alerts.set('Auto-Invite has been enabled', 'warning');
     }else{
