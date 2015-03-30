@@ -1,5 +1,4 @@
 Meteor.subscribe("communities");
-Meteor.subscribe("members");
 
 Template.userpanel.onRendered( function(){
   Session.get('add_community', false)
@@ -7,6 +6,7 @@ Template.userpanel.onRendered( function(){
 Template.communities.onRendered( function(){
   var first_community_id = CommunityList.findOne({createdBy: Meteor.userId()})._id;
   Session.set('community', first_community_id);
+  Meteor.subscribe("members", first_community_id);
 });
 Template.userpanel.helpers({
   add_community: function(){
@@ -44,6 +44,7 @@ Template.communities.events({
   'click .community': function(event){
     event.preventDefault();
     Session.set('community', this._id);
+    Meteor.subscribe("members", this._id);
   },
   'click .add_community': function(event){
     event.preventDefault();

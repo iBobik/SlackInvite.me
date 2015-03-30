@@ -6,8 +6,9 @@ Meteor.publish('currentcommunity', function (domain) {
   return CommunityList.find({slack_domain: domain}, {fields: {'token': 0}});
 });
 
-Meteor.publish('members', function () {
-  return MemberList.find();
+Meteor.publish('members', function (community_id) {
+  var community = CommunityList.findOne({_id: community_id});
+  return MemberList.find({communityId: community._id});
 });
 
 /* extend the default accounts-github function to add user email addresses and usernames to our mongodb */
