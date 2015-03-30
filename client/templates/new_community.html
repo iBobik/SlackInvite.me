@@ -18,6 +18,10 @@
         </label>
       </div>
       <button type="submit" class="btn btn-primary btn-block">Submit</button>
+      {{#if has_communities}}
+      <br/>
+      <a class="btn btn-warning btn-block cancel" role="button">Cancel</a>
+      {{/if}}
     </form>
   </div>
 </template>

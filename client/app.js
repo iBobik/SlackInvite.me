@@ -92,7 +92,15 @@ Template.footer.helpers({
     }
   }
 });
-
+Template.new_community.helpers({
+  has_communities: function(){
+    if (CommunityList.find({createdBy: Meteor.userId()}).count() != 0){
+      return true;
+    }else{
+      return false;
+    }
+  }
+});
 Template.new_community.events({
   'submit form': function(event){
     event.preventDefault();
@@ -101,5 +109,8 @@ Template.new_community.events({
     var auto_invite = event.target.auto_invite.checked;
     Meteor.call('insertCommunityData', slack_domain, token, auto_invite)
     Session.set('add_community', false);
+    },
+    'click .cancel': function(){
+      Session.set('add_community', false);
     }
 });
