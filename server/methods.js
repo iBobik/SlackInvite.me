@@ -14,8 +14,7 @@ Meteor.publish('members', function () {
 Accounts.onCreateUser(function(options, user) {
   if (options.profile) {
     user.profile = options.profile;
-  }
- 
+  };
   user.profile.github = {};
   user.profile.github.accessToken = user.services.github.accessToken;
   user.profile.github.email = user.services.github.email;
@@ -34,11 +33,10 @@ Meteor.methods({
     });
   },
   'changeAutoInvite': function(communityId, auto_invite){
-    var currentUserId = Meteor.userId();
     var community = CommunityList.findOne({_id: communityId});
-    if (community.createdBy == currentUserId){
+    if (community.createdBy == Meteor.userId()){
       CommunityList.update(communityId, {$set: {auto_invite: auto_invite}});
-    }
+    };
   },
   'inviteMember': function(user_email, slack_domain){
     var community = CommunityList.findOne({slack_domain: slack_domain});
@@ -53,17 +51,19 @@ Meteor.methods({
     else {
       //send a notice about a new request invitation via email
       admin = Meteor.users.findOne({_id: community.createdBy});
-      username = admin.profile.github.username;
+      admin_username = admin.profile.github.username;
       toemail = admin.profile.github.email;
-      Meteor.call('inviteNoticeEmail', username, user_email, slack_domain, toemail);
+      Meteor.call('inviteNoticeEmail', admin_username, user_email, slack_domain, toemail);
     }
   },
   'sendInvite': function(community_id, user_email){
     var community = CommunityList.findOne({_id: community_id});
-    var member = MemberList.findOne({user_email: user_email});
-    var API_url = 'https://' + community.slack_domain + '.slack.com/api/users.admin.invite';
-    var response = HTTP.post(API_url, {params: {email: member.user_email, token: community.token,set_active: true}});
-    MemberList.update(member._id, {$set: {invited: true}});
+    if (community.createdBy == Meteor.userId()){
+      var member = MemberList.findOne({user_email: user_email});
+      var API_url = 'https://' + community.slack_domain + '.slack.com/api/users.admin.invite';
+      var response = HTTP.post(API_url, {params: {email: member.user_email, token: community.token,set_active: true}});
+      MemberList.update(member._id, {$set: {invited: true}});
+    };
   },
   'inviteNoticeEmail': function(username, inviteuser, slackgroup, toEmail){
     /*
