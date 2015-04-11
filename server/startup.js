@@ -8,7 +8,7 @@ Meteor.startup(function () {
 this.sendEmail = function(to, subject, htmlText) {
     return Meteor.Mandrill.send({
         to: to,
-        from: "noreply@inviteslack.me",
+        from: "noreply@slackinvite.me",
         subject: subject,
         html: htmlText
     });
