@@ -28,13 +28,25 @@ Meteor.methods({
     if (Meteor.userId()){
       var token = CryptoJS.enc.Utf8.stringify(CryptoJS.enc.Base64.parse(encrypted_token));
       var currentUserId = Meteor.userId();
-      CommunityList.insert({
-        slack_domain: slack_domain,
-        token: token,
-        auto_invite: auto_invite,
-        createdBy: currentUserId
-      });
-    }
+      var communityId;
+      try {
+        communityId = CommunityList.insert({
+          slack_domain: slack_domain,
+          token: token,
+          auto_invite: auto_invite,
+          createdBy: currentUserId
+        });
+      } catch (error) {
+        if (error.name !== 'MongoError') throw error;
+        var match = error.err.match(/E11000 duplicate key error index: ([^ ]+)/);
+        if (!match) throw error;
+        if (match[1].indexOf('slack_domain') !== -1){
+          throw new Meteor.Error(403, "Community already exists.");
+        };
+        throw error;
+      }
+      return communityId;
+    };
   },
   'inviteMember': function(user_email, slack_domain){
     var community = CommunityList.findOne({slack_domain: slack_domain});

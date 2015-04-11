@@ -110,8 +110,14 @@ Template.new_community.events({
     var token = event.target.token.value;
     var encrypted_token = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(token));
     var auto_invite = event.target.auto_invite.checked;
-    Meteor.call('insertCommunityData', slack_domain, encrypted_token, auto_invite);
-    Session.set('add_community', false);
+    Meteor.call('insertCommunityData', slack_domain, encrypted_token, auto_invite,
+      function(error){
+        if (error){
+          Alerts.set(error.reason);
+        }else{
+          Session.set('add_community', false);
+        }
+      });
     },
     'click .cancel': function(){
       Session.set('add_community', false);
