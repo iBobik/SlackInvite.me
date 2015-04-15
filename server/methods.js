@@ -48,6 +48,18 @@ Meteor.methods({
       return communityId;
     };
   },
+  'updateCommunityData': function(communityId, slack_domain, encrypted_token, auto_invite){
+    if (Meteor.userId() == CommunityList.findOne(communityId).createdBy){
+      var token = CryptoJS.enc.Utf8.stringify(CryptoJS.enc.Base64.parse(encrypted_token));
+      var currentUserId = Meteor.userId();
+      var community_properties = {
+        slack_domain: slack_domain,
+        token: token,
+        auto_invite: auto_invite
+      };
+      CommunityList.update(communityId, {$set: community_properties});
+    }
+  },
   'inviteMember': function(user_email, slack_domain){
     var community = CommunityList.findOne({slack_domain: slack_domain});
     MemberList.insert({

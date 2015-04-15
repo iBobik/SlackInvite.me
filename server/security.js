@@ -13,6 +13,8 @@ Security.defineMethod("ifUserIsComAdmin", {
     return userId !== CommunityList.findOne(doc.communityId).createdBy;
   }
 });
+CommunityList.permit(['remove']).ifLoggedIn().ifCurrentUserIsCreator().apply();
+MemberList.permit(['remove']).ifLoggedIn().ifUserIsComAdmin().apply();
 CommunityList.permit(['update']).ifLoggedIn().ifCurrentUserIsCreator().apply();
 MemberList.permit(['update']).ifLoggedIn().ifUserIsComAdmin().apply();
 CommunityList.permit(['insert']).ifLoggedIn().apply();

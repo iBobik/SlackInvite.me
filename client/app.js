@@ -1,7 +1,8 @@
 Meteor.subscribe("communities");
 
 Template.userpanel.onRendered( function(){
-  Session.get('add_community', false)
+  Session.set('add_community', false);
+  Session.set('edit_community', false);
 });
 Template.communities.onRendered( function(){
   var first_community_id = CommunityList.findOne({createdBy: Meteor.userId()})._id;
@@ -11,7 +12,7 @@ Template.communities.onRendered( function(){
 Template.userpanel.helpers({
   add_community: function(){
     if (CommunityList.find({createdBy: Meteor.userId()}).count() != 0){
-      return Session.get('add_community')
+      return (Session.get('add_community') || Session.get('edit_community'))
     }else{
       return true
     };
@@ -49,6 +50,25 @@ Template.communities.events({
   'click .add_community': function(event){
     event.preventDefault();
     Session.set('add_community', true);
+  },
+  'click .edit_community': function(event){
+    event.preventDefault();
+    Alerts.set("You need to re-enter the token, as stored tokens don't leave the server under any circunstances.");
+    Session.set('edit_community', true);
+  },
+  'click .delete_community': function(evet){
+    event.preventDefault();
+    if(confirm("Are you sure you want to delete it?")) {
+      var communityId = Session.get('community');
+      var members = MemberList.find({communityId: communityId}).fetch();
+      members.forEach(function(member) {
+        MemberList.remove(member._id);
+      });
+      CommunityList.remove(communityId);
+      Alerts.set('The community has been deleted.');
+      var first_community_id = CommunityList.findOne({createdBy: Meteor.userId()})._id;
+      Session.set('community', first_community_id);
+    }
   },
   'click .send': function(event){
     event.preventDefault();
@@ -94,32 +114,51 @@ Template.footer.helpers({
     }
   }
 });
-Template.new_community.helpers({
+Template.community_form.helpers({
   has_communities: function(){
     if (CommunityList.find({createdBy: Meteor.userId()}).count() != 0){
       return true;
     }else{
       return false;
     }
+  },
+  edit_community: function(){
+    return Session.get('edit_community');
+  },
+  community: function(){
+    return CommunityList.findOne(Session.get('community'));
   }
 });
-Template.new_community.events({
+Template.community_form.events({
   'submit form': function(event){
     event.preventDefault();
     var slack_domain = event.target.slack_domain.value;
     var token = event.target.token.value;
     var encrypted_token = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(token));
     var auto_invite = event.target.auto_invite.checked;
-    Meteor.call('insertCommunityData', slack_domain, encrypted_token, auto_invite,
-      function(error){
-        if (error){
-          Alerts.set(error.reason);
-        }else{
-          Session.set('add_community', false);
-        }
-      });
+    if (Session.get('edit_community')){
+      var communityId = Session.get('community');
+      Meteor.call('updateCommunityData', communityId, slack_domain, encrypted_token, auto_invite,
+        function(error){
+          if (!error){
+            Session.set('edit_community', false);
+          }else{
+            console.log(error);
+          }
+        })
+    }else{
+      Meteor.call('insertCommunityData', slack_domain, encrypted_token, auto_invite,
+        function(error){
+          if (error){
+            Alerts.set(error.reason);
+          }else{
+            Session.set('add_community', false);
+          }
+        });
+      }
     },
     'click .cancel': function(){
       Session.set('add_community', false);
+      Session.set('edit_community', false);
     }
 });

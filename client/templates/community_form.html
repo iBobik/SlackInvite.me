@@ -1,4 +1,4 @@
-<template name="new_community">
+<template name="community_form">
   <center>
     <p>You can get your token at the bottom of the slack's Web API documentation: <a href="https://api.slack.com/web" target="_blank">api.slack.com/web</a></p>
   </center>
@@ -6,7 +6,11 @@
     <form>
       <div class="input-group">
         <span class="input-group-addon">http://</span>
-        <input type="text" class="form-control" name="slack_domain" placeholder="team domain" aria-describedby="addon2" required autofocus>
+        {{#if edit_community}}
+        <input type="text" class="form-control" name="slack_domain" placeholder="team domain" aria-describedby="addon2" value="{{community.slack_domain}}" autofocus>
+        {{else}}
+        <input data-tooltip="I'm a tooltip!" data-tooltip-direction="w" type="text" class="form-control" name="slack_domain" placeholder="team domain" aria-describedby="addon2" required autofocus>
+        {{/if}}
         <span class="input-group-addon" id="addon2">.slack.com</span>
       </div>
       <div class="form-group">
