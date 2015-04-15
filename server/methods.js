@@ -28,35 +28,24 @@ Meteor.methods({
     if (Meteor.userId()){
       var token = CryptoJS.enc.Utf8.stringify(CryptoJS.enc.Base64.parse(encrypted_token));
       var currentUserId = Meteor.userId();
-      var community;
-      var community_count = CommunityList.find({slack_domain: slack_domain}).count();
-      if (community_count != 0){
-        throw new Meteor.Error(403, "Community already exists.");
-      }else{
-        community = CommunityList.insert({
+      var communityId;
+      try {
+        communityId = CommunityList.insert({
           slack_domain: slack_domain,
           token: token,
           auto_invite: auto_invite,
           createdBy: currentUserId
         });
+      } catch (error) {
+        if (error.name !== 'MongoError') throw error;
+        var match = error.err.match(/E11000 duplicate key error index: ([^ ]+)/);
+        if (!match) throw error;
+        if (match[1].indexOf('slack_domain') !== -1){
+          throw new Meteor.Error(403, "Community already exists.");
+        };
+        throw error;
       }
-      // try {
-      //   communityId = CommunityList.insert({
-      //     slack_domain: slack_domain,
-      //     token: token,
-      //     auto_invite: auto_invite,
-      //     createdBy: currentUserId
-      //   });
-      // } catch (error) {
-      //   if (error.name !== 'MongoError') throw error;
-      //   var match = error.err.match(/E11000 duplicate key error index: ([^ ]+)/);
-      //   if (!match) throw error;
-      //   if (match[1].indexOf('slack_domain') !== -1){
-      //     throw new Meteor.Error(403, "Community already exists.");
-      //   };
-      //   throw error;
-      // }
-      return community;
+      return communityId;
     };
   },
   'updateCommunityData': function(communityId, slack_domain, encrypted_token, auto_invite){

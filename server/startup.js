@@ -1,8 +1,9 @@
 Meteor.startup(function () {
-  return Meteor.Mandrill.config({
-    username: process.env.MANDRILLUSERNAME,
-    key: process.env.MANDRILLAPIKEY
-  });
+    CommunityList._ensureIndex({slack_domain: 1}, {unique: 1});
+    return Meteor.Mandrill.config({
+        username: process.env.MANDRILLUSERNAME,
+        key: process.env.MANDRILLAPIKEY
+    });
 });
 
 this.sendEmail = function(to, subject, htmlText) {
