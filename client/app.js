@@ -1,5 +1,3 @@
-Meteor.subscribe("communities");
-
 Template.userpanel.onRendered( function(){
   Session.set('add_community', false);
   Session.set('edit_community', false);

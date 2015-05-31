@@ -7,7 +7,10 @@ Router.map(function(){
   this.route('userpanel', {
     name: 'userpanel',
     path: '/user',
-    template: 'userpanel'
+    template: 'userpanel',
+    waitOn: function(){
+      return Meteor.subscribe("user_communities");
+    }
   });
   this.route('inviteform', {
     name: 'inviteform',
