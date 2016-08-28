@@ -92,8 +92,13 @@ Template.inviteform.events({
   'submit form': function(event){
     event.preventDefault();
     var user_email = event.target.user_email.value;
-    Meteor.call('inviteMember', user_email, Template.currentData().slack_domain);
-    Session.set('inviteSent', true);
+    var email_re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (user_email.length && email_re.test(user_email)) {
+      Meteor.call('inviteMember', user_email, Template.currentData().slack_domain);
+      Session.set('inviteSent', true);
+    }
+    else
+      alert('You have to fill your e-mail.');
   }
 });
 Template.inviteform.helpers({
